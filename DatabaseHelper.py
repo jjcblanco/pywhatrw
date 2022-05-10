@@ -20,25 +20,15 @@ class DatabaseHelper():
 		self.conn = mysql.connect(user=self.username, password=self.password, host=self.server, database=self.database)
 		self.cursor = self.conn.cursor(dictionary=True)
 
-		self.conn2 = mysql.connect(user=self.username, password=self.password, host=self.server, database="mop_bd_clone")
-		self.cursor2 = self.conn2.cursor(dictionary=True)
-
 	def DBQuery(self, query):
 		self.cursor.execute(query)
-
-		self.cursor2.execute(query)
 		if("SELECT" not in query.upper()[:12]):
 			self.conn.commit()
-			self.conn2.commit()
 			return True
 		else:
 			result = self.cursor.fetchall()
 			self.conn.commit()
-			result2 = self.cursor2.fetchall()
-			self.conn2.commit()
 			return result
-
-
 
 	def ArreglarFecha(self, date, timestamp=''):
 		if timestamp == '':
@@ -54,7 +44,6 @@ class DatabaseHelper():
 			listDate = fechayhora[0].split("/")
 			return str(listDate[2]) + "/" + str(listDate[1]) + "/" + str(listDate[0])+ " "+fechayhora[1]
 			
-
 	def constructorInsert(self, tabla, arrayValores):
 		columnas=''
 		valores=[]
