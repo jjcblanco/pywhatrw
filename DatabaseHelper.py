@@ -9,19 +9,24 @@ import traceback
 
 class DatabaseHelper():
 	def __init__(self):
-		self.server = "127.0.0.1"   #"192.168.2.210"
-		self.database = "cm05"  # "mop_bd"
+		self.server = "192.168.0.140"   #"192.168.2.210"
+		self.database = "coins"  # "mop_bd"
 		self.username = "root"   # "webbackend"
-		self.password = "" # "rootmysql114!"
+		self.password = "retsam77" # "rootmysql114!"
 
 
 		if self.password is None:
 			self.password = ""
+		print(self.server)
 		self.conn = mysql.connect(user=self.username, password=self.password, host=self.server, database=self.database)
 		self.cursor = self.conn.cursor(dictionary=True)
 
+		
+
 	def DBQuery(self, query):
 		self.cursor.execute(query)
+
+		
 		if("SELECT" not in query.upper()[:12]):
 			self.conn.commit()
 			return True
@@ -29,6 +34,8 @@ class DatabaseHelper():
 			result = self.cursor.fetchall()
 			self.conn.commit()
 			return result
+
+
 
 	def ArreglarFecha(self, date, timestamp=''):
 		if timestamp == '':
@@ -44,6 +51,7 @@ class DatabaseHelper():
 			listDate = fechayhora[0].split("/")
 			return str(listDate[2]) + "/" + str(listDate[1]) + "/" + str(listDate[0])+ " "+fechayhora[1]
 			
+
 	def constructorInsert(self, tabla, arrayValores):
 		columnas=''
 		valores=[]

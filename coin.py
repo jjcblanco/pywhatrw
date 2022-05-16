@@ -1,7 +1,9 @@
 import time
 import datetime
 from datetime import datetime
+from tokenize import Double
 import requests
+from DatabaseHelper  import DatabaseHelper
 
 def convert(datetime_str):
     datetime_str = time.mktime(datetime_str)
@@ -11,9 +13,9 @@ def convert(datetime_str):
     return dateTime
 
 
-start = (2021, 12, 4, 10, 7, 00, 1, 48, 0)
-end = (2021, 13, 4, 10, 7, 00, 1, 48, 0)
-print(datetime.now)
+start = (2021, 1, 1, 0, 0, 0, 6, 48, 1) # año mes dia hora min seg toma las 3 de la mañana por el gmt2016-01-01 03:00:00
+end = (2021, 12, 31, 9, 7, 0, 1, 48, 0) #"2016-12-31 12:07:00 "
+
 print(convert(start))
 print(convert(end))
 
@@ -36,4 +38,25 @@ response = requests.get("https://api.coin360.com/coin/historical", params=query)
 
 #print(response.content) # Return the raw bytes of the data payload
 #print(response.text) # Return a string representation of the data payload
-print(response.json()) # This method is convenient when the API returns JSON
+#print(response.json()) # This method is convenient when the API returns JSON
+dbcoin = DatabaseHelper()
+
+for ord in response.json():
+    print("price:", ord["price"])
+    print("market_cap:", ord["market_cap"])
+    print("timestamp1:", ord["timestamp"])
+    print("timestamp2:",datetime.fromtimestamp(float(ord["timestamp"])))
+    #strptime(convert(start), "%b %d %Y %H:%M:%S %p"
+    print('---')
+    print(dbcoin.cursor.execute("INSERT INTO historical (coin,type,price,volume,market_cap,timestamp) VALUES (%s,%s,%s,%s,%s,%s)", ("ETH","ETHHASH",int(ord["price"]),int(ord["volume"]), int(ord["market_cap"]),datetime.strftime(datetime.fromtimestamp(float(ord["timestamp"])),'%Y-%m-%d %H:%M:%S'))))
+#dbcoin.DBQuery("INSERT INTO table_test (coin,type,price,volume,market_cap,timestamp) VALUES (%s,%s,%f,%i,%i,%i)", ("ETH","ETHHASH",ord["price"],ord["volume"], ord["market_cap"], ord["timestamp"]))
+#int(round(datetime.timestamp(datetime.strptime(str(ord["timestamp"]), "%Y-%m-%d %H:%M:%S"))
+dbcoin.DBQuery("Select * from historical")
+#now = datetime.now()
+
+#print("now =", now)
+#now1= datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+#now1= datetime.fromtimestamp(now)
+#
+# 
+#print("now 1=", now1)
