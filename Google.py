@@ -42,9 +42,10 @@ def Create_Service(client_secret_file, api_name, api_version, *scopes, prefix=''
 		print(API_SERVICE_NAME, API_VERSION, 'service created successfully')
 		return service
 	except Exception as e:
+		print("pepe")
 		print(e)
 		print(f'Failed to create service instance for {API_SERVICE_NAME}')
-		os.remove(os.path.join(working_dir, token_dir, pickle_file))
+		#os.remove(os.path.join(working_dir, token_dir, pickle_file))
 		return None
 
 def convert_to_RFC_datetime(year=1900, month=1, day=1, hour=0, minute=0):
